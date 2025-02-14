@@ -481,19 +481,19 @@ Electron.ipcMain.on("message", (event: any, args: any) => {
 function InitUnpacked(){
     console.log("[main:init:unpacked]");
     // Copy Pack Files
-    FileAPI.mkdirSync(path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked" : "../../unpacked"), {recursive: true});
-    const net_files = FileAPI.readdirSync(path.join(__dirname, "../pack"), {withFileTypes: true});
-    for (let item of net_files) {
-        if (item.name !== ".gitkeep") {
-            let srcPath = path.join(path.join(__dirname, "../pack/"), item.name);
-            let destPath = path.join(path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked/" : "../../unpacked/"), item.name);
-            FileAPI.copyFileSync(srcPath, destPath);
-        }
-    }
-    const child_process = require("child_process");
-    if(os.platform() !== "win32"){
-        child_process.spawn("chmod", ["-R", "777", path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked/" : "../../unpacked/")]);
-    }
+    // FileAPI.mkdirSync(path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked" : "../../unpacked"), {recursive: true});
+    // const net_files = FileAPI.readdirSync(path.join(__dirname, "../pack"), {withFileTypes: true});
+    // for (let item of net_files) {
+    //     if (item.name !== ".gitkeep") {
+    //         let srcPath = path.join(path.join(__dirname, "../pack/"), item.name);
+    //         let destPath = path.join(path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked/" : "../../unpacked/"), item.name);
+    //         FileAPI.copyFileSync(srcPath, destPath);
+    //     }
+    // }
+    // const child_process = require("child_process");
+    // if(os.platform() !== "win32"){
+    //     child_process.spawn("chmod", ["-R", "777", path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked/" : "../../unpacked/")]);
+    // }
 }
 
 function StopDocker(){
