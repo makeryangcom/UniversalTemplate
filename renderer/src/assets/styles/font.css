@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+.font-gest-sans {
+    --font-geist-sans: "__GeistSans_3a0388", "__GeistSans_Fallback_3a0388"
+}
+
+.font-gest-mono {
+    --font-geist-mono: "__GeistMono_c1e5c9",ui-monospace,SFMono-Regular,Roboto Mono,Menlo,Monaco,Liberation Mono,DejaVu Sans Mono,Courier New,monospace
+}
+
+@font-face {
+    font-family: __GeistSans_3a0388;
+    src: url(../fonts/geist_sans.woff2) format("woff2");
+    font-display: swap;
+    font-weight: 100 900
+}
+
+@font-face {
+    font-family: __GeistMono_c1e5c9;
+    src: url(../fonts/geist_mono.woff2) format("woff2");
+    font-display: swap;
+    font-weight: 100 900
+}
+
+@font-face {
+    font-family: __GeistSans_Fallback_3a0388;
+    src: local("Arial");
+    ascent-override:85.83%;descent-override:20.52%;line-gap-override:9.33%;size-adjust:107.19%
+}

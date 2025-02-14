@@ -1,0 +1,9 @@
+.idea
+.DS*
+.git
+.vscode
+node_modules
+yarn.lock
+vite.config.ts.timestamp*
+release/*
+!release/.gitkeep
