@@ -112,8 +112,8 @@ async function onViteServer(is_desktop){
     server.listen().then(() => {
 
         if(is_desktop){
-            onElectronMain(server);
             onElectronPreload(server);
+            onElectronMain(server);
         }
 
         const address = server.httpServer.address();

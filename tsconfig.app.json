@@ -40,9 +40,10 @@
         "noUncheckedSideEffectImports": true
     },
     "include": [
-        "./src/**/*.ts",
-        "./src/**/*.tsx",
-        "./src/**/*.d.ts",
+        "renderer/src/**/*.ts",
+        "renderer/src/**/*.tsx",
+        "renderer/src/**/*.d.ts",
+        "tools/script/**/*.ts"
     ],
     "exclude": [
         "node_modules"

@@ -19,17 +19,81 @@
         "VITE_DEV_SERVER_HOST": "localhost",
         "VITE_DEV_SERVER_PORT": 7171
     },
-    "build": {},
+    "build": {
+        "productName": "Template",
+        "appId": "com.makeryang.Template",
+        "asar": true,
+        "buildDependenciesFromSource": true,
+        "directories": {
+            "output": "release/${version}"
+        },
+        "fileAssociations": [],
+        "publish": [
+            {
+                "provider": "generic",
+                "url": "https://common.cdn.makeryang.com/install/geekllm/"
+            }
+        ],
+        "files": [
+            "release/dist"
+        ],
+        "dmg": {
+            "contents": [
+                {
+                    "x": 410,
+                    "y": 150,
+                    "type": "link",
+                    "path": "/Applications"
+                },
+                {
+                    "x": 130,
+                    "y": 150,
+                    "type": "file"
+                }
+            ]
+        },
+        "mac": {
+            "icon": "tools/icons/macos.icns",
+            "artifactName": "${productName}.${ext}"
+        },
+        "win": {
+            "icon": "tools/icons/windows.ico",
+            "artifactName": "${productName}.${ext}",
+            "target": "nsis",
+            "requestedExecutionLevel": "highestAvailable"
+        },
+        "linux": {
+            "icon": "tools/icons/icon.png",
+            "target": [
+                "AppImage"
+            ],
+            "artifactName": "${productName}.${ext}"
+        },
+        "nsis": {
+            "oneClick": false,
+            "perMachine": true,
+            "allowElevation": true,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "installerIcon": "tools/icons/windows.ico",
+            "uninstallerIcon": "tools/icons/windows.ico",
+            "shortcutName": "Template"
+        }
+    },
     "dependencies": {
+        "@fingerprintjs/fingerprintjs": "^4.5.1",
+        "axios": "^1.7.9",
         "electron-debug": "^3.2.0",
         "electron-devtools-installer": "^4.0.0",
         "electron-localstorage": "^1.0.5",
+        "electron-store": "^8.2.0",
         "electron-updater": "^6.3.9",
         "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "react-dom": "^19.0.0",
+        "adm-zip": "^0.5.10"
     },
     "devDependencies": {
-        "@eslint/js": "^9.19.0",
         "@types/node": "^22.13.4",
         "@types/react": "^19.0.8",
         "@types/react-dom": "^19.0.3",
@@ -40,17 +104,12 @@
         "electron": "^34.2.0",
         "electron-builder": "^25.1.8",
         "electron-rebuild": "^3.2.9",
-        "eslint": "^9.19.0",
-        "eslint-plugin-react-hooks": "^5.0.0",
-        "eslint-plugin-react-refresh": "^0.4.18",
-        "globals": "^15.14.0",
         "postcss": "^8.5.2",
         "rimraf": "^6.0.1",
         "tailwindcss": "^3.4.17",
         "tailwindcss-animate": "^1.0.7",
         "terser": "^5.39.0",
         "typescript": "~5.7.2",
-        "typescript-eslint": "^8.22.0",
         "vite": "^6.1.0",
         "yargs": "^17.7.2"
     }
