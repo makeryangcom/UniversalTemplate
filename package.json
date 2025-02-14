@@ -1,9 +1,9 @@
 {
-    "name": "desktop",
-    "title": "DesktopTemplate",
+    "name": "template",
+    "title": "UniversalTemplate",
     "version": "1.0.0",
     "author": "MakerYang <www.makeryang.com>",
-    "description": "DesktopTemplate",
+    "description": "Vite + React + TypeScript + Electron For (Browser and Desktop) Template",
     "license": "MIT",
     "type": "module",
     "main": "release/dist/main/index.cjs",
