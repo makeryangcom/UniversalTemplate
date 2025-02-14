@@ -3,12 +3,12 @@
     "title": "UniversalTemplate",
     "version": "1.0.0",
     "author": "MakerYang <www.makeryang.com>",
-    "description": "Vite + React + TypeScript + Electron For (Browser and Desktop) Template",
+    "description": "Template",
     "license": "MIT",
     "type": "module",
     "main": "release/dist/main/index.cjs",
     "scripts": {
-        "dev": "electron-rebuild -f -w && cross-env SCRIPT_MODE=dev node --max-old-space-size=6096 tools/script/index.mjs",
+        "dev": "electron-rebuild -f -w && rimraf release && cross-env SCRIPT_MODE=dev node --max-old-space-size=6096 tools/script/index.mjs",
         "build": "electron-rebuild -f -w && rimraf release && cross-env SCRIPT_MODE=build node --max-old-space-size=6096 tools/script/index.mjs",
         "win64": "electron-builder --win --x64",
         "win32": "electron-builder --win --ia32",
@@ -54,11 +54,11 @@
         },
         "mac": {
             "icon": "tools/icons/macos.icns",
-            "artifactName": "${productName}.${ext}"
+            "artifactName": "${productName}_Setup_${version}.${ext}"
         },
         "win": {
             "icon": "tools/icons/windows.ico",
-            "artifactName": "${productName}.${ext}",
+            "artifactName": "${productName}_Setup_${version}.${ext}",
             "target": "nsis",
             "requestedExecutionLevel": "highestAvailable"
         },
@@ -67,7 +67,7 @@
             "target": [
                 "AppImage"
             ],
-            "artifactName": "${productName}.${ext}"
+            "artifactName": "${productName}_Setup_${version}.${ext}"
         },
         "nsis": {
             "oneClick": false,
