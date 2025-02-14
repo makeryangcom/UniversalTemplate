@@ -32,7 +32,7 @@ yarn build --mode=browser
 yarn build --mode=desktop
 ```
 
-## Pack
+## Pack Desktop App
 
 ```shell
 yarn win64
