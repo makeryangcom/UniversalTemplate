@@ -12,18 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import "./assets/styles/base.css";
 import "./assets/styles/font.css";
 import "./assets/styles/tailwind.css";
 import "./assets/styles/themes.css";
 
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
+import { ContextState } from "./states";
+import { LanguageState } from "./states/language";
+import { ThemeState } from "./states/theme";
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <div className="p-4 space-y-2">
-            <div className="text-3xl font-bold leading-tight tracking-tighter md:text-4xl lg:leading-[1.1]">Build your component library</div>
-            <p className="max-w-2xl text-lg font-light">A set of beautifully-designed, accessible, and customizable components to help you build your component library. Open Source.</p>
-        </div>
-    </StrictMode>
+    <LanguageState>
+        <ThemeState>
+            <ContextState>
+                <RouterProvider router={router} />
+            </ContextState>
+        </ThemeState>
+    </LanguageState>
 )

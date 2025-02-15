@@ -83,15 +83,27 @@
     },
     "dependencies": {
         "@fingerprintjs/fingerprintjs": "^4.5.1",
+        "@radix-ui/react-label": "^2.1.2",
+        "@radix-ui/react-popover": "^1.1.6",
+        "@radix-ui/react-slot": "^1.1.2",
+        "@radix-ui/react-tooltip": "^1.1.8",
+        "adm-zip": "^0.5.10",
         "axios": "^1.7.9",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
         "electron-debug": "^3.2.0",
         "electron-devtools-installer": "^4.0.0",
         "electron-localstorage": "^1.0.5",
         "electron-store": "^8.2.0",
         "electron-updater": "^6.3.9",
+        "i18next": "^24.2.2",
+        "i18next-http-backend": "^3.0.2",
+        "lucide-react": "^0.475.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
-        "adm-zip": "^0.5.10"
+        "react-i18next": "^15.4.0",
+        "react-router-dom": "^7.1.5",
+        "tailwind-merge": "^3.0.1"
     },
     "devDependencies": {
         "@types/node": "^22.13.4",

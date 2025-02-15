@@ -11,20 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-{
-    "files": [],
-    "references": [
-        {
-            "path": "./tsconfig.app.json"
-        },
-        {
-            "path": "./tsconfig.node.json"
-        }
-    ],
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["./renderer/src/*"]
-        }
+
+import { Button } from "@/components/base/button";
+import { useLanguageState } from "@/states/language";
+import { Languages } from "lucide-react";
+
+export function Language() {
+
+    const {change, i18next} = useLanguageState();
+
+    function onLanguageSwitcher(){
+        i18next.language === "zh" ? change("en") : change("zh");
     }
+
+    return (
+        <div className="w-auto no-drag">
+            <Button variant="ghost" size="icon" onClick={onLanguageSwitcher}>
+                <Languages />
+            </Button>
+        </div>
+    );
 }

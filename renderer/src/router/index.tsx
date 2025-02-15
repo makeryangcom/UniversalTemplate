@@ -11,20 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-{
-    "files": [],
-    "references": [
-        {
-            "path": "./tsconfig.app.json"
-        },
-        {
-            "path": "./tsconfig.node.json"
-        }
-    ],
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["./renderer/src/*"]
-        }
+
+import { createBrowserRouter } from "react-router-dom";
+import Pages from "../pages";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Pages />
     }
-}
+]);
+
+export default router;

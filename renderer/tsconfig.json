@@ -33,15 +33,18 @@
         "jsx": "react-jsx",
         /* Linting */
         "strict": true,
-        "noUnusedLocals": true,
+        "noUnusedLocals": false,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        "noUncheckedSideEffectImports": true
+        "noUncheckedSideEffectImports": true,
+        "paths": {
+            "@/*": ["./src/*"]
+        }
     },
     "include": [
-        "renderer/src/**/*.ts",
-        "renderer/src/**/*.tsx",
-        "renderer/src/**/*.d.ts",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.d.ts",
     ],
     "exclude": [
         "node_modules"

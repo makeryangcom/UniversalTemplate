@@ -56,11 +56,11 @@ function onIcons(){
 }
 
 function onPack(){
-    file.mkdirSync("release/dist/pack", {recursive: true});
-    const nets = file.readdirSync("tools/pack", {withFileTypes: true});
+    file.mkdirSync("release/dist/packages", {recursive: true});
+    const nets = file.readdirSync("tools/packages", {withFileTypes: true});
     for (let item of nets) {
-        let srcPath = path.join("tools/pack", item.name);
-        let destPath = path.join("release/dist/pack", item.name);
+        let srcPath = path.join("tools/packages", item.name);
+        let destPath = path.join("release/dist/packages", item.name);
         file.copyFileSync(srcPath, destPath);
     }
 }

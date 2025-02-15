@@ -422,6 +422,11 @@ Electron.ipcMain.on("message", (event: any, args: any) => {
     }
     if(args.type === "template:updater:app"){
         console.log("[main:updater:app]", args.data);
+        if(Package.build.publish[0].url === ""){
+            console.log("[main:updater:app]", args.data, "off");
+            return;
+        }
+        console.log("[main:updater:app]", args.data, "on");
         if(Electron.app.isPackaged){
             let updater_app_path = path.resolve(__dirname, "../../../../");
             let updater_app_download_length = 0;
@@ -429,9 +434,8 @@ Electron.ipcMain.on("message", (event: any, args: any) => {
             let updater_app_file = FileAPI.createWriteStream(updater_app_path + "/updater_app.zip");
             let updater_app_download = new Request().getApi({
                 method: "GET",
-                uri: "https://common.cdn.makeryang.com/updater/geekllm/" + args.data + "/" + os.platform() + ".zip",
+                uri: Package.build.publish[0].url + "updater/" + args.data + "/" + os.platform() + ".zip",
                 headers: {
-                    "Referer": "https://desktop.makeryang.com",
                     "User-Agent": user_agent
                 }
             });
@@ -481,19 +485,22 @@ Electron.ipcMain.on("message", (event: any, args: any) => {
 function InitUnpacked(){
     console.log("[main:init:unpacked]");
     // Copy Pack Files
-    // FileAPI.mkdirSync(path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked" : "../../unpacked"), {recursive: true});
-    // const net_files = FileAPI.readdirSync(path.join(__dirname, "../pack"), {withFileTypes: true});
-    // for (let item of net_files) {
-    //     if (item.name !== ".gitkeep") {
-    //         let srcPath = path.join(path.join(__dirname, "../pack/"), item.name);
-    //         let destPath = path.join(path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked/" : "../../unpacked/"), item.name);
-    //         FileAPI.copyFileSync(srcPath, destPath);
-    //     }
-    // }
-    // const child_process = require("child_process");
-    // if(os.platform() !== "win32"){
-    //     child_process.spawn("chmod", ["-R", "777", path.join(__dirname, Electron.app.isPackaged ? "../../../../unpacked/" : "../../unpacked/")]);
-    // }
+    FileAPI.mkdirSync(path.join(__dirname, Electron.app.isPackaged ? "../../../../packages" : "../../packages"), {recursive: true});
+    const net_files = FileAPI.readdirSync(path.join(__dirname, "../packages"), {withFileTypes: true});
+    console.log("[main:init:unpacked:files]", net_files.length);
+    if(net_files.length > 0){
+        for (let item of net_files) {
+            if (item.name !== ".gitkeep") {
+                let srcPath = path.join(path.join(__dirname, "../packages/"), item.name);
+                let destPath = path.join(path.join(__dirname, Electron.app.isPackaged ? "../../../../packages/" : "../../packages/"), item.name);
+                FileAPI.copyFileSync(srcPath, destPath);
+            }
+        }
+    }
+    const child_process = require("child_process");
+    if(os.platform() !== "win32"){
+        child_process.spawn("chmod", ["-R", "777", path.join(__dirname, Electron.app.isPackaged ? "../../../../packages/" : "../../packages/")]);
+    }
 }
 
 function StopDocker(){
@@ -561,6 +568,13 @@ function DisplayEvent(){
 function UpdaterEvent(){
     
     console.log("[main:updater:event]");
+
+    if(Package.build.publish[0].url === ""){
+        console.log("[main:updater:event]", "off");
+        return;
+    }
+
+    console.log("[main:updater:event]", "on");
 
     Updater.autoUpdater.setFeedURL(Package.build.publish[0].url);
 
