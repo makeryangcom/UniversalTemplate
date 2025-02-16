@@ -1,6 +1,6 @@
 # UniversalTemplate
 
-⚡ Vite + React + TypeScript + Electron For (Browser and Desktop) Template ⚡
+⚡ Vite + React + TypeScript For (Browser and Electron Desktop) Template ⚡
 
 ## License
 
