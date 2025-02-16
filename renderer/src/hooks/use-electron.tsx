@@ -12,14 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { createHashRouter } from "react-router-dom";
-import Pages from "../pages";
-
-const router = createHashRouter([
-    {
-        path: "/",
-        element: <Pages />
-    }
-]);
-
-export default router;
+export function useIsElectron() {
+    return typeof process !== "undefined" && process.versions && process.versions.electron;
+}

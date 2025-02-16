@@ -31,7 +31,7 @@ interface Props extends Theme, Actions {};
 const default_props: Props = {
     config: {
         radius: localStorage.getItem("template:theme:radius") || "0.5",
-        name: localStorage.getItem("template:theme:name") || "zinc",
+        name: localStorage.getItem("template:theme:name") || "",
         mode: localStorage.getItem("template:theme:mode") || "light",
     },
     updateConfig: () => {},

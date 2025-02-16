@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { createHashRouter } from "react-router-dom";
-import Pages from "../pages";
-
-const router = createHashRouter([
-    {
-        path: "/",
-        element: <Pages />
+export function useIsPlatform() {
+    const userAgent = (navigator as any).userAgent;
+    if (userAgent.includes("Windows")) {
+        return "windows";
     }
-]);
-
-export default router;
+    if (userAgent.includes("Mac")) {
+        return "mac";
+    }
+    if (userAgent.includes("Linux")) {
+        return "linux";
+    }
+    return "-";
+}

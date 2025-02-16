@@ -19,6 +19,7 @@ import "./assets/styles/themes.css";
 
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
+import { Toaster } from "./components/base/toaster";
 import router from "./router";
 import { ContextState } from "./states";
 import { LanguageState } from "./states/language";
@@ -30,6 +31,7 @@ createRoot(document.getElementById("root")!).render(
             <ContextState>
                 <RouterProvider router={router} />
             </ContextState>
+            <Toaster />
         </ThemeState>
     </LanguageState>
 )

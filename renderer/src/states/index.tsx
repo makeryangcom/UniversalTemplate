@@ -16,7 +16,12 @@ import { createContext, ReactNode, useContext, useState } from "react";
 
 export interface State {
     data: {
-        version: string
+        version: string,
+        header: {
+            tools: {
+                max: boolean
+            }
+        }
     }
 }
 
@@ -28,7 +33,12 @@ interface Props extends State, Actions {};
 
 const default_props: Props = {
     data: {
-        version: "1.0.0",
+        version: "0.0.1",
+        header: {
+            tools: {
+                max: false
+            }
+        }
     },
     updateData: () => {},
 }

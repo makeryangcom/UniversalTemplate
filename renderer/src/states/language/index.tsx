@@ -18,7 +18,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { initReactI18next, useTranslation } from "react-i18next";
 
 const isBrowser = typeof window !== "undefined";
-const language = isBrowser && localStorage.getItem("template:language") || "en";
+const language = isBrowser && localStorage.getItem("template:language") || navigator.language.slice(0, 2).toLowerCase();
 
 const Context = createContext({
     i18next: i18next,
@@ -32,7 +32,7 @@ i18next.use(initReactI18next).use(Backend).init({
     fallbackLng: "en",
     debug: false,
     backend: {
-        loadPath: "/locales/{{lng}}/{{ns}}.json",
+        loadPath: "./locales/{{lng}}/{{ns}}.json",
     },
     ns: ["common"],
     defaultNS: "common",

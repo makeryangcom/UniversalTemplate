@@ -13,18 +13,44 @@
 // limitations under the License.
 
 import { Button } from "@/components/base/button";
+import { ToastAction } from "@/components/base/toast";
+import { HeaderTools } from "@/components/header/tools";
 import { Language } from "@/components/language";
 import { ThemeCustomize, ThemeMode } from "@/components/theme";
+import { useToast } from "@/hooks/use-toast";
 import { useLanguageState } from "@/states/language";
 import { ChevronRight } from "lucide-react";
 import { useContextState } from "../states";
 
-
 export default function Pages(_props: any) {
 
+    const { toast } = useToast();
     const { data } = useContextState();
-
     const { lang } = useLanguageState();
+
+    function onToast(type: string) {
+        if(type === "default"){
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request."
+            });
+        }
+        if(type === "action"){
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            });
+        }
+        if(type === "destructive"){
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            });
+        }
+    }
 
     return (
         <div className="page">
@@ -32,18 +58,19 @@ export default function Pages(_props: any) {
                 <Language />
                 <ThemeCustomize />
                 <ThemeMode />
+                <HeaderTools />
             </div>
             <div className="w-[400px] h-[130px] top-[calc(50%-65px)] fixed left-0 right-0 m-auto space-y-3">
                 <div className="w-full text-xl font-bold leading-tight tracking-tighter space-x-2">
                     <span className="w-auto">Vite + React + TypeScript</span>
                     <span className="w-auto">{data.version}</span>
                 </div>
-                <p className="w-full">Electron For (Browser and Desktop) Template</p>
+                <p className="w-full">For (Browser and Electron Desktop) Template</p>
                 <div className="w-auto flex items-center space-x-2">
                     <Button>{lang("button")}</Button>
-                    <Button variant="secondary">{lang("button")}</Button>
-                    <Button variant="destructive">{lang("button")}</Button>
-                    <Button variant="ghost">{lang("button")}</Button>
+                    <Button onClick={()=>{onToast("action")}} variant="secondary">{lang("button")}</Button>
+                    <Button onClick={()=>{onToast("destructive")}} variant="destructive">{lang("button")}</Button>
+                    <Button onClick={()=>{onToast("default")}} variant="ghost">{lang("button")}</Button>
                     <Button variant="outline" size="icon">
                         <ChevronRight />
                     </Button>

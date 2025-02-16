@@ -78,17 +78,24 @@ if (!Electron.app.requestSingleInstanceLock()){
 
 // Configuration related to environment variables and startup parameters
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
+
 ElectronDebug({showDevTools: false, devToolsMode: "bottom"});
+
 Electron.app.commandLine.appendSwitch("ignore-certificate-errors", "true");
 Electron.app.commandLine.appendSwitch("disable-gpu", "false");
 Electron.app.commandLine.appendSwitch("enable-unsafe-swiftshader");
+
 if(Windows.UserData.Lang !== ""){
     Electron.app.commandLine.appendSwitch("--lang", Windows.UserData.Lang); // zh-CN or en-US
 }else{
     Windows.UserData.Lang = Electron.app.getLocale()
     Electron.app.commandLine.appendSwitch("--lang", Windows.UserData.Lang);
 }
-// Electron.app.commandLine.appendSwitch("--proxy-pac-url", "https://common.cdn.geekros.com/upload/network/network_geekllm.js?time=" + Math.floor(Date.now() / 1000));
+
+// 
+if(Package.proxy.pac_url !== ""){
+    Electron.app.commandLine.appendSwitch("--proxy-pac-url", Package.proxy.pac_url + "?time=" + Math.floor(Date.now() / 1000));
+}
 
 // Initialize the application's root domain and path
 const base_url: string = Electron.app.isPackaged ? `file://${path.join(__dirname, "../renderer/index.html")}` : `http://${Package.env.VITE_DEV_SERVER_HOST}:${Package.env.VITE_DEV_SERVER_PORT}`;
@@ -562,7 +569,7 @@ function DisplayEvent(){
         y: bounds.y + bounds.height / 2,
     });
 
-    store.set("geekmll:electron:display", display.id);
+    store.set("template:electron:display", display.id);
 }
 
 function UpdaterEvent(){

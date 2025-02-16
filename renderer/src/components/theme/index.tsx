@@ -44,6 +44,12 @@ export function ThemeCustomize() {
 
     const { config, updateConfig } = useThemeState();
 
+    function onReset(){
+        onColorSwitcher("");
+        onRadiusSwitcher("0.5");
+        onModeSwitcher("light");
+    }
+
     function onColorSwitcher(name: string) {
         config.name = name;
         document.documentElement.classList.remove(
@@ -81,7 +87,7 @@ export function ThemeCustomize() {
                                 <div className="font-semibold leading-none tracking-tight">Theme Customizer</div>
                                 <div className="text-xs text-muted-foreground">Customize your components colors.</div>
                             </div>
-                            <Button variant="ghost" size="icon" className="ml-auto rounded-md">
+                            <Button onClick={onReset} variant="ghost" size="icon" className="ml-auto rounded-md">
                                 <Repeat />
                             </Button>
                         </div>
