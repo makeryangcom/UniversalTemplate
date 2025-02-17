@@ -26,6 +26,8 @@ export default defineConfig(({mode})=> ({
         __APP_NAME__: JSON.stringify(Package.title),
 		__APP_VERSION__: JSON.stringify(Package.version),
         __APP_LOCAL_STORAGE_PREFIX__: JSON.stringify(Package.env.LOCAL_STORAGE_PREFIX),
+        __APP_HEADER_REFERER__: JSON.stringify(Package.env.HEADER_REFERER),
+        __APP_HEADER_SOURCE__: JSON.stringify(Package.env.HEADER_SOURCE),
         __VITE_DEV_HOST__: JSON.stringify(Package.env.VITE_DEV_SERVER_HOST),
     },
     esbuild: {
