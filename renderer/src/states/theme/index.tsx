@@ -28,11 +28,13 @@ interface Actions {
 
 interface Props extends Theme, Actions {};
 
+const local_storage_name = __APP_LOCAL_STORAGE_PREFIX__ + ":theme:";
+
 const default_props: Props = {
     config: {
-        radius: localStorage.getItem("template:theme:radius") || "0.5",
-        name: localStorage.getItem("template:theme:name") || "",
-        mode: localStorage.getItem("template:theme:mode") || "light",
+        radius: localStorage.getItem(local_storage_name + "radius") || "0.5",
+        name: localStorage.getItem(local_storage_name + "name") || "",
+        mode: localStorage.getItem(local_storage_name + "mode") || "light",
     },
     updateConfig: () => {},
 }
@@ -54,9 +56,9 @@ export const ThemeState = ({ children }: { children: ReactNode }) => {
     document.documentElement.classList.add(`theme-${config.name}`);
 
     const updateConfig = (config: Theme["config"]) => {
-        localStorage.setItem("template:theme:radius", config.radius);
-        localStorage.setItem("template:theme:name", config.name);
-        localStorage.setItem("template:theme:mode", config.mode);
+        localStorage.setItem(local_storage_name + "radius", config.radius);
+        localStorage.setItem(local_storage_name + "name", config.name);
+        localStorage.setItem(local_storage_name + "mode", config.mode);
         setConfig((prev: any) => ({ ...prev, ...config }));
     };
 

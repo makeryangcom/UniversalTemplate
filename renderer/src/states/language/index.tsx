@@ -17,8 +17,10 @@ import Backend from "i18next-http-backend";
 import { createContext, useContext, useEffect, useState } from "react";
 import { initReactI18next, useTranslation } from "react-i18next";
 
+const local_storage_name = __APP_LOCAL_STORAGE_PREFIX__ + ":language";
+
 const isBrowser = typeof window !== "undefined";
-const language = isBrowser && localStorage.getItem("template:language") || navigator.language.slice(0, 2).toLowerCase();
+const language = isBrowser && localStorage.getItem(local_storage_name) || navigator.language.slice(0, 2).toLowerCase();
 
 const Context = createContext({
     i18next: i18next,
@@ -45,7 +47,7 @@ export const LanguageState= ({ children }: any) => {
     const [language, setLanguage] = useState(i18next.language);
 
     useEffect(() => {
-        const savedLanguage = localStorage.getItem("template:language");
+        const savedLanguage = localStorage.getItem(local_storage_name);
         if (savedLanguage) {
             i18next.changeLanguage(savedLanguage);
             setLanguage(savedLanguage);
@@ -63,7 +65,7 @@ export const LanguageState= ({ children }: any) => {
     const change = (lang: any) => {
         i18next.changeLanguage(lang);
         setLanguage(lang);
-        localStorage.setItem("template:language", lang);
+        localStorage.setItem(local_storage_name, lang);
     };
 
     return (

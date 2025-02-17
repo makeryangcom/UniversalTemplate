@@ -13,3 +13,8 @@
 // limitations under the License.
 
 /// <reference types="vite/client" />
+
+declare const __APP_NAME__: string;
+declare const __APP_VERSION__: string;
+declare const __APP_LOCAL_STORAGE_PREFIX__: string;
+declare const __VITE_DEV_HOST__: string;
