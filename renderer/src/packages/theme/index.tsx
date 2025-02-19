@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { useThemeState } from "@/hooks/theme";
-import { baseColors } from "@/hooks/theme/color";
+import { ThemeColors } from "@/hooks/theme/color";
 import { cn } from "@/libs/utils";
 import { Button } from "@/packages/base/button";
 import { Label } from "@/packages/base/label";
@@ -53,7 +53,7 @@ export function ThemeCustomize() {
     function onColorSwitcher(name: string) {
         config.name = name;
         document.documentElement.classList.remove(
-            ...baseColors.map((color: any) => `theme-${color.name}`),
+            ...ThemeColors.map((color: any) => `theme-${color.name}`),
         );
         document.documentElement.classList.add(`theme-${config.name}`);
         updateConfig(config);
@@ -95,7 +95,7 @@ export function ThemeCustomize() {
                             <div className="space-y-1.5">
                                 <Label className="text-xs">Color</Label>
                                 <div className="grid grid-cols-3 gap-2">
-                                    {baseColors.filter((theme: any) => !["slate", "stone", "gray", "neutral"].includes(theme.name)).map((theme: any) => {
+                                    {ThemeColors.filter((theme: any) => !["slate", "stone", "gray", "neutral"].includes(theme.name)).map((theme: any) => {
                                         const isActive = config.name === theme.name;
                                         return (
                                             <Button onClick={() => { onColorSwitcher(theme.name) }} variant={"outline"} size="sm" key={theme.name} className={cn("justify-start", isActive && "border-2 border-primary")} style={{ "--theme-primary": `hsl(${theme?.activeColor[config.mode === "dark" ? "dark" : "light"]})` } as React.CSSProperties}>
