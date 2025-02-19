@@ -1,3 +1,18 @@
 {
-    "button": "Button"
+    "button": "Button",
+    "header": {
+        "theme": {
+            "title": "Theme Customizer",
+            "description": "Customize your components colors.",
+            "color": "Color",
+            "radius": "Radius",
+            "mode": "Mode"
+        },
+        "tools": {
+            "min": "Minimize",
+            "full": "Full Screen",
+            "restore": "Restore",
+            "close": "Close"
+        }
+    }
 }

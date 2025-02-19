@@ -55,8 +55,8 @@ let Windows: any = {
         titleBarStyle: "hidden"
     },
     UserData: {
-        Lang: store.get("template:electron:language", ""),
-        Display: store.get("template:electron:display", 0),
+        Lang: store.get(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", ""),
+        Display: store.get(Package.env.LOCAL_STORAGE_PREFIX + ":electron:display", 0),
         Sleep: false,
         Quit: false,
     },
@@ -193,16 +193,16 @@ function onWindowMain(){
 
     Electron.globalShortcut.register("Shift+Alt+L", () => {
         console.log("[main:global:shortcut]", "L");
-        store.set("template:electron:language", "");
+        store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", "");
         if(Windows.UserData.Lang === ""){
-            store.set("template:electron:language", "en-US");
+            store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", "en-US");
         }
         if(Windows.UserData.Lang !== ""){
             if(Windows.UserData.Lang === "en-US"){
-                store.set("template:electron:language", "zh-CN");
+                store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", "zh-CN");
             }
             if(Windows.UserData.Lang === "zh-CN"){
-                store.set("template:electron:language", "en-US");
+                store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", "en-US");
             }
         }
     });
@@ -569,7 +569,7 @@ function DisplayEvent(){
         y: bounds.y + bounds.height / 2,
     });
 
-    store.set("template:electron:display", display.id);
+    store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:display", display.id);
 }
 
 function UpdaterEvent(){

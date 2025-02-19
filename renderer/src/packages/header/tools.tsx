@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { useContextState } from "@/hooks";
+import { useLanguageState } from "@/hooks/language";
 import { useIsElectron } from "@/hooks/use-electron";
 import { useIsPlatform } from "@/hooks/use-platform";
 import { Button } from "@/packages/base/button";
@@ -23,6 +24,7 @@ import { useEffect } from "react";
 export function HeaderTools() {
 
     const { data, updateData } = useContextState();
+    const { lang } = useLanguageState();
     const platform = useIsPlatform();
     const electron = useIsElectron();
 
@@ -58,13 +60,13 @@ export function HeaderTools() {
         <>
             {(platform === "windows" && electron) && (
                 <div className="w-auto space-x-2 no-drag">
-                    <Button onClick={() => { onTools("min") }} className="w-8 h-8" variant="ghost" size="icon" title="最小化">
+                    <Button onClick={() => { onTools("min") }} className="w-8 h-8" variant="ghost" size="icon" title={lang("header.tools.min")}>
                         <MinusIcon className="w-4 h-4" />
                     </Button>
-                    <Button onClick={() => { onTools("size") }} className="w-8 h-8" variant="ghost" size="icon" title={data.header.tools.max ? "还原" : "全屏"}>
+                    <Button onClick={() => { onTools("size") }} className="w-8 h-8" variant="ghost" size="icon" title={data.header.tools.max ? lang("header.tools.restore") : lang("header.tools.full")}>
                         {data.header.tools.max ? <RotateCounterClockwiseIcon className="w-4 h-4" /> : <BoxIcon className="w-4 h-4" />}
                     </Button>
-                    <Button onClick={() => { onTools("close") }} className="w-8 h-8" variant="ghost" size="icon" title="关闭">
+                    <Button onClick={() => { onTools("close") }} className="w-8 h-8" variant="ghost" size="icon" title={lang("header.tools.close")}>
                         <Cross1Icon className="w-4 h-4" />
                     </Button>
                 </div>

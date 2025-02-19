@@ -1,3 +1,18 @@
 {
-    "button": "按钮"
+    "button": "按钮",
+    "header": {
+        "theme": {
+            "title": "自定义主题",
+            "description": "自定义您的组件颜色。",
+            "color": "颜色",
+            "radius": "圆角",
+            "mode": "模式"
+        },
+        "tools": {
+            "min": "最小化",
+            "full": "全屏",
+            "restore": "恢复",
+            "close": "关闭"
+        }
+    }
 }

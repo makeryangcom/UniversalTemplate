@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useLanguageState } from "@/hooks/language";
 import { useThemeState } from "@/hooks/theme";
 import { ThemeColors } from "@/hooks/theme/color";
 import { cn } from "@/libs/utils";
@@ -43,6 +44,7 @@ export function ThemeMode() {
 export function ThemeCustomize() {
 
     const { config, updateConfig } = useThemeState();
+    const { lang } = useLanguageState();
 
     function onReset(){
         onColorSwitcher("");
@@ -84,8 +86,8 @@ export function ThemeCustomize() {
                     <div className="flex flex-col space-y-4">
                         <div className="flex items-start pt-4 md:pt-0">
                             <div className="space-y-1 pr-2">
-                                <div className="font-semibold leading-none tracking-tight">Theme Customizer</div>
-                                <div className="text-xs text-muted-foreground">Customize your components colors.</div>
+                                <div className="font-semibold leading-none tracking-tight">{lang("header.theme.title")}</div>
+                                <div className="text-xs text-muted-foreground">{lang("header.theme.description")}</div>
                             </div>
                             <Button onClick={onReset} variant="ghost" size="icon" className="ml-auto rounded-md">
                                 <Repeat />
@@ -93,7 +95,7 @@ export function ThemeCustomize() {
                         </div>
                         <div className="flex flex-1 flex-col space-y-4 md:space-y-6">
                             <div className="space-y-1.5">
-                                <Label className="text-xs">Color</Label>
+                                <Label className="text-xs">{lang("header.theme.color")}</Label>
                                 <div className="grid grid-cols-3 gap-2">
                                     {ThemeColors.filter((theme: any) => !["slate", "stone", "gray", "neutral"].includes(theme.name)).map((theme: any) => {
                                         const isActive = config.name === theme.name;
@@ -109,7 +111,7 @@ export function ThemeCustomize() {
                                 </div>
                             </div>
                             <div className="space-y-1.5">
-                                <Label className="text-xs">Radius</Label>
+                                <Label className="text-xs">{lang("header.theme.radius")}</Label>
                                 <div className="grid grid-cols-5 gap-2">
                                     {["0", "0.3", "0.5", "0.75", "1.0"].map((value: any) => {
                                         return (
@@ -121,7 +123,7 @@ export function ThemeCustomize() {
                                 </div>
                             </div>
                             <div className="space-y-1.5">
-                                <Label className="text-xs">Mode</Label>
+                                <Label className="text-xs">{lang("header.theme.mode")}</Label>
                                 <div className="grid grid-cols-3 gap-2">
                                     <Button onClick={()=>{onModeSwitcher("light")}} variant={"outline"} size="sm" className={cn(config.mode === "light" && "border-2 border-primary")}>
                                         <Sun className="mr-1 -translate-x-1" />
