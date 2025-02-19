@@ -19,11 +19,11 @@ import "./assets/styles/themes.css";
 
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
-import { Toaster } from "./components/base/toaster";
-import router from "./router";
-import { ContextState } from "./states";
-import { LanguageState } from "./states/language";
-import { ThemeState } from "./states/theme";
+import { ContextState } from "./hooks";
+import { LanguageState } from "./hooks/language";
+import router from "./hooks/router";
+import { ThemeState } from "./hooks/theme";
+import { Toaster } from "./packages/base/toaster";
 
 createRoot(document.getElementById("root")!).render(
     <LanguageState>
