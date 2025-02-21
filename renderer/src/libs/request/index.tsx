@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useIsElectron } from "@/hooks/use-electron";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import axios from "axios";
 
@@ -45,10 +46,12 @@ const default_props: Props = {
         localStorage.removeItem(local_storage_name);
     },
     api: async (method: string, path: string, params: object, data: object) => {
+        const is_electron = useIsElectron();
+        const base_url = is_electron ? __VITE_DEV_PROXY__ : "";
         return FingerprintJS.load().then((fp: any) => {
             return fp.get().then((result: any) => {
                 return default_props.instance({
-                    baseURL: "",
+                    baseURL: base_url,
                     headers: {
                         "Content-Type": "application/json",
                         "Content-X-Time": Date.now().toString(),
@@ -65,8 +68,10 @@ const default_props: Props = {
                 });
             });
         }).catch((_error: any) => {
+            const is_electron = useIsElectron();
+            const base_url = is_electron ? __VITE_DEV_PROXY__ : "";
             return default_props.instance({
-                baseURL: "",
+                baseURL: base_url,
                 headers: {
                     "Content-Type": "application/json",
                     "Content-X-Time": Date.now().toString(),

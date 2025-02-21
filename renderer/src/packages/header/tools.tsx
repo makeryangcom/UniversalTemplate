@@ -26,16 +26,16 @@ export function HeaderTools() {
     const { data, updateData } = useContextState();
     const { lang } = useLanguageState();
     const platform = useIsPlatform();
-    const electron = useIsElectron();
+    const is_electron = useIsElectron();
 
     function onTools(type: string) {
-        if (electron) {
+        if (is_electron) {
             (window as any).base.ipc.send("message", { type: "template:header:right:button", data: type });
         }
     }
 
     function onListenerResize() {
-        if (electron) {
+        if (is_electron) {
             (window as any).base.ipc.send("message", { type: "template:window:resize", data: "resize" });
             window.addEventListener("resize", function () {
                 (window as any).base.ipc.send("message", { type: "template:window:resize", data: "resize" });
@@ -44,7 +44,7 @@ export function HeaderTools() {
     }
 
     useEffect(() => {
-        if (electron) {
+        if (is_electron) {
             onListenerResize();
             (window as any).base.ipc.on("message", (_event: any, message: any) => {
                 if (message.type === "main:window:resize") {
@@ -58,7 +58,7 @@ export function HeaderTools() {
 
     return (
         <>
-            {(platform === "windows" && electron) && (
+            {(platform === "windows" && is_electron) && (
                 <div className="w-auto space-x-2 no-drag">
                     <Button onClick={() => { onTools("min") }} className="w-8 h-8" variant="ghost" size="icon" title={lang("header.tools.min")}>
                         <MinusIcon className="w-4 h-4" />

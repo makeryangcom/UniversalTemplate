@@ -20,3 +20,4 @@ declare const __APP_LOCAL_STORAGE_PREFIX__: string;
 declare const __APP_HEADER_REFERER__: string;
 declare const __APP_HEADER_SOURCE__: string;
 declare const __VITE_DEV_HOST__: string;
+declare const __VITE_DEV_PROXY__: string;

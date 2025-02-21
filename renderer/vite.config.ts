@@ -29,6 +29,7 @@ export default defineConfig(({mode})=> ({
         __APP_HEADER_REFERER__: JSON.stringify(Package.env.HEADER_REFERER),
         __APP_HEADER_SOURCE__: JSON.stringify(Package.env.HEADER_SOURCE),
         __VITE_DEV_HOST__: JSON.stringify(Package.env.VITE_DEV_SERVER_HOST),
+        __VITE_DEV_PROXY__: JSON.stringify(Package.env.VITE_DEV_SERVER_PROXY),
     },
     esbuild: {
         drop: mode === "production" ? ["debugger"] : [],
@@ -39,6 +40,14 @@ export default defineConfig(({mode})=> ({
     server: {
         host: Package.env.VITE_DEV_SERVER_HOST,
         port: Package.env.VITE_DEV_SERVER_PORT,
+        proxy: {
+			"/backend": {
+				target: Package.env.VITE_DEV_SERVER_PROXY,
+				secure: false,
+				changeOrigin: true,
+				rewrite: (path: any) => path.replace(/^\/backend/, '')
+			},
+		}
     },
     css: {
         postcss: {
