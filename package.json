@@ -37,7 +37,7 @@
         "publish": [
             {
                 "provider": "generic",
-                "url": "https://common.cdn.makeryang.com/install/geekllm/"
+                "url": "https://domain.com/install/"
             }
         ],
         "files": [
