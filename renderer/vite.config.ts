@@ -21,7 +21,6 @@ import Package from "../package.json";
 
 export default defineConfig(({mode})=> ({
     root: __dirname,
-    base: "./",
     define: {
         __APP_NAME__: JSON.stringify(Package.title),
 		__APP_VERSION__: JSON.stringify(Package.version),
