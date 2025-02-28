@@ -12,22 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import NotFound from "@/app/404";
-import { createBrowserRouter, createHashRouter } from "react-router-dom";
-import Pages from "../../app";
-import { useIsElectron } from "../use-electron";
+import { Button } from "@/packages/base/button";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { Link } from "react-router-dom";
 
-const router_page: any = [
-    {
-        path: "/",
-        element: <Pages />
-    },
-    {
-        path: "*",
-        element: <NotFound />
-    },
-];
+export function GithubLink() {
 
-const router = useIsElectron() ? createHashRouter(router_page) : createBrowserRouter(router_page);
-
-export default router;
+    return (
+        <Link to="https://github.com/makeryangcom" target="_blank">
+            <Button variant="outline" size="icon">
+                <GitHubLogoIcon className="w-4 h-4" />
+            </Button>
+        </Link>
+    );
+}

@@ -26,7 +26,7 @@ export function Language() {
 
     return (
         <div className="w-auto no-drag">
-            <Button variant="ghost" size="icon" onClick={onLanguageSwitcher}>
+            <Button variant="outline" size="icon" onClick={onLanguageSwitcher}>
                 <Languages />
             </Button>
         </div>

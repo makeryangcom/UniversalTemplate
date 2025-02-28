@@ -16,6 +16,7 @@ import { useLanguageState } from "@/hooks/language";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/packages/base/button";
 import { ToastAction } from "@/packages/base/toast";
+import { GithubLink } from "@/packages/github";
 import { HeaderTools } from "@/packages/header/tools";
 import { Language } from "@/packages/language";
 import { ThemeCustomize, ThemeMode } from "@/packages/theme";
@@ -56,6 +57,7 @@ export default function Pages(_props: any) {
         <div className="page">
             <div className="w-full fixed top-0 left-0 right-0 p-2 flex items-center justify-end space-x-2 drag">
                 <Language />
+                <GithubLink />
                 <ThemeCustomize />
                 <ThemeMode />
                 <HeaderTools />
