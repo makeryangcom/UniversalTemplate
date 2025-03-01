@@ -168,6 +168,7 @@
         "terser": "^5.39.0",
         "typescript": "~5.7.2",
         "vite": "^6.1.0",
+        "vite-plugin-chunk-split": "^0.5.0",
         "yargs": "^17.7.2"
     }
 }

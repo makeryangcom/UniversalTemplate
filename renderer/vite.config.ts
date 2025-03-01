@@ -17,6 +17,7 @@ import autoprefixer from "autoprefixer";
 import path from "path";
 import tailwind from "tailwindcss";
 import { defineConfig } from "vite";
+import { chunkSplitPlugin } from "vite-plugin-chunk-split";
 import Package from "../package.json";
 
 export default defineConfig(({mode})=> ({
@@ -34,7 +35,25 @@ export default defineConfig(({mode})=> ({
         drop: mode === "production" ? ["debugger"] : [],
     },
     plugins: [
-        react()
+        react(),
+        chunkSplitPlugin({
+            strategy: "single-vendor",
+            customChunk: (args) => {
+                let { file, id, moduleId, root } = args;
+                if (file.startsWith("src/app/")) {
+                    file = file.substring(4);
+                    file = file.replace(/\.[^.$]+$/, '');
+                    return file;
+                }
+                return null;
+            },
+            customSplitting: {
+                "react-vendor": ["react", "react-dom"],
+                "packages": [/src\/packages/],
+                "hooks": [/src\/hooks/],
+                "libs": [/src\/libs/],
+            }
+        })
     ],
     server: {
         host: Package.env.VITE_DEV_SERVER_HOST,
