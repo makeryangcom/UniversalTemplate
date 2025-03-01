@@ -140,7 +140,7 @@ if (argvs.mode === "desktop") {
 
     await build({configFile: "tools/script/preload/vite.config.ts"});
 
-    await build({configFile: "renderer/vite.config.ts"});
+    await build({configFile: "renderer/vite.config.ts", base: (process.env.SCRIPT_MODE === "dev" ? "/" : "./")});
 
     onIndex("release/dist/renderer/index.html");
 
