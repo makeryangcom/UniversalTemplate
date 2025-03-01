@@ -13,7 +13,8 @@
         "win64": "electron-builder --win --x64",
         "win32": "electron-builder --win --ia32",
         "mac": "electron-builder --mac --x64",
-        "linux": "electron-builder --linux --amd64"
+        "linux": "electron-builder --linux --amd64",
+        "postinstall": "electron-builder install-app-deps"
     },
     "env": {
         "VITE_DEV_SERVER_HOST": "localhost",

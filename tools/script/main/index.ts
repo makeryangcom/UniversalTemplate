@@ -125,7 +125,7 @@ function onWindowMain(){
 
     Windows.Main = new Electron.BrowserWindow(Windows.Options);
     Windows.Main.loadURL(
-        base_url + "#/",
+        base_url,
         {
             "userAgent": user_agent
         }
