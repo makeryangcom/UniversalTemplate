@@ -39,6 +39,17 @@
         --sidebar-accent-foreground: 240 5.9% 10%;
         --sidebar-border: 220 13% 91%;
         --sidebar-ring: 217.2 91.2% 59.8%;
+
+        --tips-success: #67c23a;
+        --tips-success-bg: rgb(239.8, 248.9, 235.3);
+        --tips-warning: #e6a23c;
+        --tips-warning-bg: rgb(252.5, 245.7, 235.5);
+        --tips-danger: #f56c6c;
+        --tips-danger-bg: rgb(254, 240.3, 240.3);
+        --tips-error: #f56c6c;
+        --tips-error-bg: rgb(254, 240.3, 240.3);
+        --tips-info: #909399;
+        --tips-info-bg: rgb(243.9, 244.2, 244.8);
     }
 
     .dark {
@@ -74,14 +85,26 @@
         --sidebar-accent-foreground: 240 4.8% 95.9%;
         --sidebar-border: 240 3.7% 15.9%;
         --sidebar-ring: 217.2 91.2% 59.8%;
+
+        --tips-success: #67c23a;
+        --tips-success-bg: rgb(28.3, 37.4, 23.8);
+        --tips-warning: #e6a23c;
+        --tips-warning-bg: rgb(41, 34.2, 24);
+        --tips-danger: #f56c6c;
+        --tips-danger-bg: rgb(42.5, 28.8, 28.8);
+        --tips-error: #f56c6c;
+        --tips-error-bg: rgb(42.5, 28.8, 28.8);
+        --tips-info: #909399;
+        --tips-info-bg: rgb(32.4, 32.7, 33.3);
     }
 }
 
 @layer base {
-  * {
-    @apply border-border;
+    * {
+        @apply border-border;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
 }
