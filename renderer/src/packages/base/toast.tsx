@@ -29,12 +29,10 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-[var(--tips-info-bg)] bg-[var(--tips-info-bg)] text-[var(--tips-info)]",
+        default: "border-[var(--tips-default-bg)] bg-[var(--tips-default-bg)] text-[var(--tips-default)]",
         warning: "border-[var(--tips-warning-bg)] bg-[var(--tips-warning-bg)] text-[var(--tips-warning)]",
-        danger: "border-[var(--tips-danger-bg)] bg-[var(--tips-danger-bg)] text-[var(--tips-danger)]",
         success: "border-[var(--tips-success-bg)] bg-[var(--tips-success-bg)] text-[var(--tips-success)]",
-        error: "border-[var(--tips-error-bg)] bg-[var(--tips-error-bg)] text-[var(--tips-error)]",
-        destructive: "border-[var(--tips-error-bg)] bg-[var(--tips-error-bg)] text-[var(--tips-error)]",
+        error: "border-[var(--tips-error-bg)] bg-[var(--tips-error-bg)] text-[var(--tips-error)]"
       },
     },
     defaultVariants: {

@@ -44,12 +44,10 @@
         --tips-success-bg: rgb(239.8, 248.9, 235.3);
         --tips-warning: #e6a23c;
         --tips-warning-bg: rgb(252.5, 245.7, 235.5);
-        --tips-danger: #f56c6c;
-        --tips-danger-bg: rgb(254, 240.3, 240.3);
         --tips-error: #f56c6c;
         --tips-error-bg: rgb(254, 240.3, 240.3);
-        --tips-info: #909399;
-        --tips-info-bg: rgb(243.9, 244.2, 244.8);
+        --tips-default: #909399;
+        --tips-default-bg: rgb(243.9, 244.2, 244.8);
     }
 
     .dark {
@@ -90,12 +88,10 @@
         --tips-success-bg: rgb(28.3, 37.4, 23.8);
         --tips-warning: #e6a23c;
         --tips-warning-bg: rgb(41, 34.2, 24);
-        --tips-danger: #f56c6c;
-        --tips-danger-bg: rgb(42.5, 28.8, 28.8);
         --tips-error: #f56c6c;
         --tips-error-bg: rgb(42.5, 28.8, 28.8);
-        --tips-info: #909399;
-        --tips-info-bg: rgb(32.4, 32.7, 33.3);
+        --tips-default: #909399;
+        --tips-default-bg: rgb(32.4, 32.7, 33.3);
     }
 }
 

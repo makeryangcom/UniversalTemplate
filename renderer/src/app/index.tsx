@@ -38,6 +38,7 @@ export default function Pages(_props: any) {
         }
         if(type === "action"){
             toast({
+                variant: "warning",
                 title: "Uh oh! Something went wrong.",
                 description: "There was a problem with your request.",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
@@ -45,7 +46,7 @@ export default function Pages(_props: any) {
         }
         if(type === "destructive"){
             toast({
-                variant: "destructive",
+                variant: "error",
                 title: "Uh oh! Something went wrong.",
                 description: "There was a problem with your request.",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
