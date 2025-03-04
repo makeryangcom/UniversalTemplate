@@ -33,7 +33,8 @@ const toastVariants = cva(
         warning: "border-[var(--tips-warning-bg)] bg-[var(--tips-warning-bg)] text-[var(--tips-warning)]",
         danger: "border-[var(--tips-danger-bg)] bg-[var(--tips-danger-bg)] text-[var(--tips-danger)]",
         success: "border-[var(--tips-success-bg)] bg-[var(--tips-success-bg)] text-[var(--tips-success)]",
-        destructive: "border-[var(--tips-danger-bg)] bg-[var(--tips-danger-bg)] text-[var(--tips-danger)]",
+        error: "border-[var(--tips-error-bg)] bg-[var(--tips-error-bg)] text-[var(--tips-error)]",
+        destructive: "border-[var(--tips-error-bg)] bg-[var(--tips-error-bg)] text-[var(--tips-error)]",
       },
     },
     defaultVariants: {
