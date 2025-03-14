@@ -25,7 +25,8 @@
         "HEADER_SOURCE": "browser"
     },
     "proxy": {
-        "pac_url": ""
+        "pac_url": "",
+        "file_name": ""
     },
     "build": {
         "productName": "Template",
