@@ -16,6 +16,7 @@ import { ipcRenderer } from "electron";
 import Os from "os";
 import Path from "path";
 import * as Package from "../../../package.json";
+import { Command } from "./command";
 
 (window as any).base = {
     name: Package.name,
@@ -27,8 +28,9 @@ import * as Package from "../../../package.json";
         electron: () => process.versions.electron
     },
     paths: {
+        path: Path,
         app: (process: any)=> {
-            return Path.join(__dirname, (process.env["VITE_DEV_SERVER_HOST"] !== "127.0.0.1" ? "./../../../../" : "./../../"));
+            return Path.join(__dirname, (process.env["VITE_DEV_SERVER_HOST"] !== "::1" ? "./../../../../" : "./../../"));
         },
         roaming: (process: any)=> {
             const path_temp= (Os.platform() === "win32" ? process.env["APPDATA"] + "" : process.env["HOME"] + "");
@@ -43,8 +45,14 @@ import * as Package from "../../../package.json";
         }
     },
     environment: (process: any) => {
-        return process.env["VITE_DEV_SERVER_HOST"] !== "127.0.0.1" ? "produce" : "develop"
+        return process.env["VITE_DEV_SERVER_HOST"] !== "::1" ? "produce" : "develop"
     },
     platform: () => Os.platform(),
     ipc: ipcRenderer,
+    process: process,
+    command: Command,
+    proxy: {
+        pac_url: Package.proxy.pac_url,
+        file_name: Package.proxy.file_name
+    }
 }

@@ -47,11 +47,12 @@ let Windows: any = {
             nodeIntegration: true,
             contextIsolation: false,
             nodeIntegrationInWorker: false,
+            nativeWindowOpen: true,
             preload: path.join(__dirname, "../preload/index.cjs")
         },
         fullscreen: false,
         show: false,
-        backgroundColor: "#ffffff",
+        backgroundColor: "rgb(221, 227, 253)",
         titleBarStyle: "hidden"
     },
     UserData: {
@@ -64,10 +65,10 @@ let Windows: any = {
 };
 
 // Prevent the application from opening multiple times
-if (!Electron.app.requestSingleInstanceLock()){
+if (!Electron.app.requestSingleInstanceLock()) {
     Electron.app.quit();
-}else{
-    Electron.app.on("second-instance", ()=>{
+} else {
+    Electron.app.on("second-instance", () => {
         if (Windows.Main) {
             Windows.Main.show();
             Windows.Main.setAlwaysOnTop(true);
@@ -79,21 +80,21 @@ if (!Electron.app.requestSingleInstanceLock()){
 // Configuration related to environment variables and startup parameters
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
-ElectronDebug({showDevTools: false, devToolsMode: "bottom"});
+ElectronDebug({ showDevTools: false, devToolsMode: "bottom" });
 
 Electron.app.commandLine.appendSwitch("ignore-certificate-errors", "true");
 Electron.app.commandLine.appendSwitch("disable-gpu", "false");
 Electron.app.commandLine.appendSwitch("enable-unsafe-swiftshader");
 
 console.log("[main:lang]", Windows.UserData.Lang);
-if(Windows.UserData.Lang !== ""){
+if (Windows.UserData.Lang !== "") {
     Electron.app.commandLine.appendSwitch("--lang", Windows.UserData.Lang); // zh-CN or en-US
-}else{
+} else {
     Windows.UserData.Lang = Electron.app.getLocale()
     Electron.app.commandLine.appendSwitch("--lang", Windows.UserData.Lang);
 }
 
-if(Package.proxy.pac_url !== ""){
+if (Package.proxy.pac_url !== "") {
     console.log("[main:pac_url]", Package.proxy.pac_url);
     Electron.app.commandLine.appendSwitch("--proxy-pac-url", Package.proxy.pac_url + "?time=" + Math.floor(Date.now() / 1000));
 }
@@ -104,11 +105,11 @@ Electron.app.setPath("userData", customUserDataPath);
 // Initialize the application's root domain and path
 const base_url: string = Electron.app.isPackaged ? `file://${path.join(__dirname, "../renderer/index.html")}` : `http://${Package.env.VITE_DEV_SERVER_HOST}:${Package.env.VITE_DEV_SERVER_PORT}`;
 let user_agent: string = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 MicroMessenger/1.0.0 Chromium/" + Package.version;
-if(os.platform() === "darwin"){
+if (os.platform() === "darwin") {
     user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 MicroMessenger/1.0.0 Chromium/" + Package.version;
 }
 
-function onWindowMain(){
+function onWindowMain() {
     console.log("[main:onWindowMain]", Windows.UserData.Lang);
 
     let display = null;
@@ -118,13 +119,13 @@ function onWindowMain(){
         display = displays.find(display => display.id === Windows.UserData.Display);
     }
 
-    if(display){
+    if (display) {
         const { bounds } = display;
         const window_width = Windows.Options.width;
         const window_height = Windows.Options.height;
         const x = bounds.x + Math.round((bounds.width - window_width) / 2);
         const y = bounds.y + Math.round((bounds.height - window_height) / 2);
-        Windows.Options = {...Windows.Options, x, y};
+        Windows.Options = { ...Windows.Options, x, y };
     }
 
     Windows.Main = new Electron.BrowserWindow(Windows.Options);
@@ -135,21 +136,11 @@ function onWindowMain(){
         }
     ).then((res: any) => {
         console.log("[main:load]", res, Electron.app.isPackaged);
-        if(!Windows.UserData.Quit){
+        if (!Windows.UserData.Quit) {
             const tray_development = os.platform() === "darwin" ? "tools/icons/macos.png" : "tools/icons/windows.ico";
             const tray_production = os.platform() === "darwin" ? path.join(__dirname, "../icons/macos.png") : path.join(__dirname, "../icons/windows.ico");
             const tray_icon = Electron.app.isPackaged ? new Electron.Tray(Electron.nativeImage.createFromPath(tray_production)) : new Electron.Tray(Electron.nativeImage.createFromPath(tray_development));
             const tray_menu = Electron.Menu.buildFromTemplate([
-                {
-                    label: Windows.UserData.Lang === "zh-CN" ? "官方网站" : "Official website",
-                    click: function () {
-                        Electron.shell.openExternal("https://www.makeryang.com")
-                    }
-                },
-                {
-                    label: Windows.UserData.Lang === "zh-CN" ? ("版本：" + Package.version) : ("Version: " + Package.version),
-                    click: function () {}
-                },
                 {
                     label: Windows.UserData.Lang === "zh-CN" ? "退出软件" : "Exit",
                     click: function () {
@@ -161,16 +152,25 @@ function onWindowMain(){
             ]);
             tray_icon.setContextMenu(tray_menu);
             tray_icon.setToolTip(Package.title);
-            tray_icon.on("click",function(_event: any){});
+            tray_icon.on("click", function (_event: any) { });
             tray_icon.on("double-click", function () {
                 Windows.Main.show();
-            });   
+            });
         }
     });
 
+    Windows.Main.webContents.on("did-attach-webview", (_event: any, wc: any) => {
+        wc.setWindowOpenHandler((details: any) => {
+            console.log("[main:did-attach-webview]", details.url);
+            Windows.Main.webContents.send("message", { type: "main:browser:open:window", data: details });
+            return { action: "deny" };
+        });
+    });
+
     Windows.Main.on("ready-to-show", function () {
+        console.log("[main:ready-to-show]");
         Windows.Main.show();
-        Windows.Main.webContents.send("message", {type: "main:user:agent", data: user_agent});
+        Windows.Main.webContents.send("message", { type: "main:user:agent", data: user_agent });
     });
 
     Windows.Main.on("moved", () => {
@@ -178,8 +178,16 @@ function onWindowMain(){
         DisplayEvent();
     });
 
+    Windows.Main.on("blur", () => {
+        Windows.Main.setBackgroundColor("rgb(221, 227, 233)");
+    });
+
+    Windows.Main.on("focus", () => {
+        Windows.Main.setBackgroundColor("rgb(211, 227, 253)");
+    });
+
     Windows.Main.on("close", (event: any) => {
-        if(!Windows.UserData.Quit){
+        if (!Windows.UserData.Quit) {
             Windows.Main.hide();
             event.preventDefault();
         }
@@ -197,14 +205,14 @@ function onWindowMain(){
     Electron.globalShortcut.register("Shift+Alt+L", () => {
         console.log("[main:global:shortcut]", "L");
         store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", "");
-        if(Windows.UserData.Lang === ""){
+        if (Windows.UserData.Lang === "") {
             store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", "en-US");
         }
-        if(Windows.UserData.Lang !== ""){
-            if(Windows.UserData.Lang === "en-US"){
+        if (Windows.UserData.Lang !== "") {
+            if (Windows.UserData.Lang === "en-US") {
                 store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", "zh-CN");
             }
-            if(Windows.UserData.Lang === "zh-CN"){
+            if (Windows.UserData.Lang === "zh-CN") {
                 store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:language", "en-US");
             }
         }
@@ -216,34 +224,34 @@ function onWindowMain(){
 
     Electron.globalShortcut.register("Shift+Alt+H", () => {
         console.log("[main:global:shortcut]", "H");
-        Windows.Main.webContents.openDevTools({mode: "bottom", activate: false});
+        Windows.Main.webContents.openDevTools({ mode: "bottom", activate: false });
     });
 
     Electron.globalShortcut.register("Shift+Alt+V", () => {
         console.log("[main:global:shortcut]", "V");
-        Windows.Main.webContents.send("message", {type: "main:browser:tools"});
+        Windows.Main.webContents.send("message", { type: "main:browser:tools" });
     });
 
     Electron.globalShortcut.register("Shift+Alt+C", () => {
         console.log("[main:global:shortcut]", "C");
-        Electron.session.defaultSession.clearCache().then(()=>{
+        Electron.session.defaultSession.clearCache().then(() => {
             Electron.session.defaultSession.clearStorageData({
                 storages: ["cookies", "indexdb", "websql", "filesystem", "shadercache", "websql", "serviceworkers", "cachestorage"]
-            }).then(()=>{
+            }).then(() => {
                 console.log("[main:clear:cache:then]");
-                Windows.Main.webContents.send("message", {type: "main:clear:cache"});
-            }).catch((e: any)=>{
+                Windows.Main.webContents.send("message", { type: "main:clear:cache" });
+            }).catch((e: any) => {
                 console.log("[main:clear:cache:catch]", e);
-                Windows.Main.webContents.send("message", {type: "main:clear:cache"});
+                Windows.Main.webContents.send("message", { type: "main:clear:cache" });
             });
-        }).catch(()=>{
-            Windows.Main.webContents.send("message", {type: "main:clear:cache"});
+        }).catch(() => {
+            Windows.Main.webContents.send("message", { type: "main:clear:cache" });
         });
     });
 
     Electron.globalShortcut.register("Shift+Alt+S", () => {
         console.log("[main:global:shortcut]", "S");
-        Windows.Main.webContents.send("message", {type: "main:display:sleep", status: !Windows.UserData.Sleep});
+        Windows.Main.webContents.send("message", { type: "main:display:sleep", status: !Windows.UserData.Sleep });
     });
 
     DisplayEvent();
@@ -270,7 +278,7 @@ Electron.app.whenReady().then(() => {
     // Active state monitoring
     Electron.app.on("activate", () => {
         console.log("[main:activate]");
-        if (Electron.BrowserWindow.getAllWindows().length === 0){
+        if (Electron.BrowserWindow.getAllWindows().length === 0) {
             console.log("[main:activate:length]", 0);
             onWindowMain();
         }
@@ -281,163 +289,179 @@ Electron.app.whenReady().then(() => {
     Electron.powerMonitor.on("suspend", () => {
         console.log("[main:powerMonitor:suspend]");
         if (Windows.Main) {
-            Windows.Main.webContents.send("message", {type: "main:power:lock"});
+            Windows.Main.webContents.send("message", { type: "main:power:lock" });
         }
     });
     Electron.powerMonitor.on("resume", () => {
         console.log("[main:powerMonitor:resume]");
         if (Windows.Main) {
-            Windows.Main.webContents.send("message", {type: "main:power:unlock"});
+            Windows.Main.webContents.send("message", { type: "main:power:unlock" });
         }
     });
     Electron.powerMonitor.on("lock-screen", () => {
         console.log("[main:powerMonitor:lock-screen]");
         if (Windows.Main) {
-            Windows.Main.webContents.send("message", {type: "main:screen:lock"});
+            Windows.Main.webContents.send("message", { type: "main:screen:lock" });
         }
     });
     Electron.powerMonitor.on("unlock-screen", () => {
         console.log("[main:powerMonitor:unlock-screen]");
         if (Windows.Main) {
-            Windows.Main.webContents.send("message", {type: "main:screen:unlock"});
+            Windows.Main.webContents.send("message", { type: "main:screen:unlock" });
         }
     });
 });
 
 Electron.ipcMain.on("browser", (_event: any, args: any) => {
-    if(args.type === "template:geeker:chatgpt:account"){
-        Windows.Main.webContents.send("message", {type: "main:geeker:chatgpt:account", data: args.data});
+    if (args.type === "template:geeker:chatgpt:account") {
+        Windows.Main.webContents.send("message", { type: "main:geeker:chatgpt:account", data: args.data });
     }
-    if(args.type === "template:geeker:chatgpt:session"){
-        Windows.Main.webContents.send("message", {type: "main:geeker:chatgpt:session", data: args.data});
+    if (args.type === "template:geeker:chatgpt:session") {
+        Windows.Main.webContents.send("message", { type: "main:geeker:chatgpt:session", data: args.data });
     }
-    if(args.type === "template:geeker:chatgpt:login"){
-        Windows.Main.webContents.send("message", {type: "main:geeker:chatgpt:login", data: args.data});
+    if (args.type === "template:geeker:chatgpt:login") {
+        Windows.Main.webContents.send("message", { type: "main:geeker:chatgpt:login", data: args.data });
     }
 });
 
 // Listen for main process messages
 Electron.ipcMain.on("message", (event: any, args: any) => {
-    if(args.type === "template:select:folder:path"){
-        if(args.callback && args.callback === "local_path"){
+    if (args.type === "template:select:folder:path") {
+        console.log("[main:select:folder:path]");
+        if (args.callback && args.callback !== "") {
             Electron.dialog.showOpenDialog(Windows.Main, {
                 properties: ["openDirectory"]
             }).then((r: any) => {
-                event.sender.send("message", {type: "select_folder_path", callback: args.callback, data: r});
+                event.sender.send("message", { type: "main:select:folder:path", callback: args.callback, data: r });
             });
         }
     }
-    if(args.type === "template:header:right:button"){
-        if(args.data === "close"){
-            if(!Windows.UserData.Quit){
+    if (args.type === "template:select:folder:file") {
+        console.log("[main:select:folder:file]", args.callback);
+        if (args.callback && args.callback !== "") {
+            Electron.dialog.showOpenDialog(Windows.Main, {
+                properties: ["openFile"],
+                filters: [
+                    { name: "Images", extensions: ["jpg", "jpeg", "png", "gif", "bmp"] }
+                ]
+            }).then((r: any) => {
+                event.sender.send("message", { type: "main:select:folder:file", callback: args.callback, data: r });
+            });
+        }
+    }
+    if (args.type === "template:header:right:button") {
+        console.log("[main:header:right:button]");
+        if (args.data === "close") {
+            if (!Windows.UserData.Quit) {
                 Windows.Main.hide();
-            }else{
+            } else {
                 Windows.Main.close();
                 Electron.app.quit();
             }
         }
-        if(args.data === "min"){
+        if (args.data === "min") {
             Windows.Main.minimize();
         }
-        if(args.data === "size"){
-            if(Windows.Main.isMaximized()){
+        if (args.data === "size") {
+            if (Windows.Main.isMaximized()) {
                 Windows.Main.unmaximize();
-            }else{
+            } else {
                 Windows.Main.maximize();
             }
         }
     }
-    if(args.type === "template:window:resize"){
-        if(args.data === "resize"){
-            if(Windows.Main.isMaximized()){
-                event.sender.send("message", {type: "main:window:resize", data: "max"});
-            }else{
-                event.sender.send("message", {type: "main:window:resize", data: "restore"});
+    if (args.type === "template:window:resize") {
+        console.log("[main:window:resize]");
+        if (args.data === "resize") {
+            if (Windows.Main.isMaximized()) {
+                event.sender.send("message", { type: "main:window:resize", data: "max" });
+            } else {
+                event.sender.send("message", { type: "main:window:resize", data: "restore" });
             }
         }
     }
-    if(args.type === "template:cache:clear"){
-        Electron.session.defaultSession.clearCache().then(()=>{
+    if (args.type === "template:cache:clear") {
+        console.log("[main:main:cache:clear]");
+        Electron.session.defaultSession.clearCache().then(() => {
             Electron.session.defaultSession.clearStorageData({
                 storages: ["cookies", "indexdb", "websql", "filesystem", "shadercache", "websql", "serviceworkers", "cachestorage"]
-            }).then(()=>{
-                event.sender.send("message", {type: "main:cache:clear"});
-            }).catch((_e: any)=>{
-                event.sender.send("message", {type: "main:cache:clear"});
+            }).then(() => {
+                event.sender.send("message", { type: "main:cache:clear" });
+            }).catch((_e: any) => {
+                event.sender.send("message", { type: "main:cache:clear" });
             });
-        }).catch(()=>{
-            event.sender.send("message", {type: "main:cache:clear"});
+        }).catch(() => {
+            event.sender.send("message", { type: "main:cache:clear" });
         });
     }
-    if(args.type === "template:refresh:account:data"){
-        event.sender.send("message", {type: "main:refresh:account:data"});
+    if (args.type === "template:refresh:account:data") {
+        console.log("[main:refresh:account:data]");
+        event.sender.send("message", { type: "main:refresh:account:data" });
     }
-    if(args.type === "template:docker:set:proxy"){
+    if (args.type === "template:engine:start:complete") {
+        console.log("[main:engine:start:complete]");
+        event.sender.send("message", { type: "main:engine:start:complete" });
+    }
+    if (args.type === "template:engine:set:proxy") {
         Electron.session.defaultSession.clearAuthCache().then(() => {
-            Electron.session.defaultSession.setProxy({pacScript: ""}).then(() => {
+            Electron.session.defaultSession.setProxy({ pacScript: "" }).then(() => {
                 Electron.session.defaultSession.setProxy({
                     pacScript: args.data + "?time=" + Math.floor(Date.now() / 1000)
-                }).then((_e: any)=>{
-                    console.log("[main:docker:set:proxy:then]");
-                    Windows.Main.webContents.send("message", {type: "main:user:agent", data: user_agent});
-                }).catch((e: any)=>{
-                    console.log("[main:docker:set:proxy:catch]", e);
+                }).then((_e: any) => {
+                    console.log("[main:engine:set:proxy:then]");
+                    Windows.Main.webContents.send("message", { type: "main:user:agent", data: user_agent });
+                }).catch((e: any) => {
+                    console.log("[main:engine:set:proxy:catch]", e);
                 });
-            }).catch((e: any)=>{
-                console.log("[main:docker:set:proxy:catch]", e);
+            }).catch((e: any) => {
+                console.log("[main:engine:set:proxy:catch]", e);
             });
         });
     }
-    if(args.type === "template:docker:reset"){
-        console.log("[main:docker:reset]");
+    if (args.type === "template:engine:reset") {
+        console.log("[main:engine:reset]");
         Electron.session.defaultSession.clearAuthCache().then(() => {
-            Electron.session.defaultSession.setProxy({pacScript: ""}).then(() => {
-                StopDocker();
-                setTimeout(()=>{
-                    InitUnpacked();
-                    event.sender.send("message", {type: "main::docker:reset"});
-                }, 2000);
-            });
+            StopEngine();
+            setTimeout(() => {
+                InitUnpacked();
+                event.sender.send("message", { type: "main::engine:reset" });
+            }, 2000);
         });
     }
-    if(args.type === "template:docker:restart"){
-        console.log("[main:docker:restart]");
+    if (args.type === "template:engine:restart") {
+        console.log("[main:engine:restart]");
         Electron.session.defaultSession.clearAuthCache().then(() => {
-            Electron.session.defaultSession.setProxy({pacScript: ""}).then(() => {
-                StopDocker();
-                setTimeout(()=>{
-                    event.sender.send("message", {type: "main::docker:restart"});
-                }, 2000);
-            });
+            StopEngine();
+            setTimeout(() => {
+                event.sender.send("message", { type: "main::engine:restart" });
+            }, 2000);
         });
     }
-    if(args.type === "template:docker:stop"){
-        console.log("[main:docker:stop]");
+    if (args.type === "template:engine:stop") {
+        console.log("[main:engine:stop]");
         Electron.session.defaultSession.clearAuthCache().then(() => {
-            Electron.session.defaultSession.setProxy({pacScript: ""}).then(() => {
-                StopDocker();
-            });
+            StopEngine();
         });
     }
-    if(args.type === "template:display:sleep"){
-        if(args.status){
+    if (args.type === "template:display:sleep") {
+        if (args.status) {
             Windows.UserData.Sleep = Electron.powerSaveBlocker.start("prevent-display-sleep");
-        }else{
-            if(Windows.UserData.Sleep){
+        } else {
+            if (Windows.UserData.Sleep) {
                 Electron.powerSaveBlocker.stop(Windows.UserData.Sleep);
                 Windows.UserData.Sleep = false;
             }
         }
         console.log("[main:display:sleep]", Windows.UserData.Sleep);
     }
-    if(args.type === "template:updater:app"){
+    if (args.type === "template:updater:app") {
         console.log("[main:updater:app]", args.data);
-        if(Package.build.publish[0].url === ""){
+        if (Package.build.publish[0].url === "") {
             console.log("[main:updater:app]", args.data, "off");
             return;
         }
         console.log("[main:updater:app]", args.data, "on");
-        if(Electron.app.isPackaged){
+        if (Electron.app.isPackaged) {
             let updater_app_path = path.resolve(__dirname, "../../../../");
             let updater_app_download_length = 0;
             let updater_app_download_received = 0;
@@ -455,14 +479,14 @@ Electron.ipcMain.on("message", (event: any, args: any) => {
             });
             updater_app_download.on("data", function (chunk: any) {
                 updater_app_download_received += chunk.length;
-                event.sender.send("message", {type: "main:updater:app:progress", data: parseFloat(((updater_app_download_received * 100) / updater_app_download_length).toFixed(2))});
+                event.sender.send("message", { type: "main:updater:app:progress", data: parseFloat(((updater_app_download_received * 100) / updater_app_download_length).toFixed(2)) });
             });
             updater_app_download.on("end", function () {
-                event.sender.send("message", {type: "main:updater:app:end", data: false});
-                setTimeout(()=>{
+                event.sender.send("message", { type: "main:updater:app:end", data: false });
+                setTimeout(() => {
                     const zip = new AdmZip().getApi(updater_app_path + "/updater_app.zip");
                     zip.extractAllTo(updater_app_path, true);
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         FileAPI.unlinkSync(updater_app_path + "/updater_app.zip");
                         ReplaceAsar();
                         Windows.UserData.Quit = true;
@@ -474,17 +498,17 @@ Electron.ipcMain.on("message", (event: any, args: any) => {
             });
         }
     }
-    if(args.type === "template:updater"){
+    if (args.type === "template:updater") {
         console.log("[main:updater]");
-        Updater.autoUpdater.checkForUpdates().then((_r: any)=> {
-            if(!Electron.app.isPackaged){
+        Updater.autoUpdater.checkForUpdates().then((_r: any) => {
+            if (!Electron.app.isPackaged) {
                 Windows.Main.webContents.send("message", {
                     type: "main:updater:update:not:available"
                 });
             }
         });
     }
-    if(args.type === "template:quit"){
+    if (args.type === "template:quit") {
         console.log("[main:quit]");
         Windows.UserData.Quit = true;
         Windows.Main.close();
@@ -492,13 +516,13 @@ Electron.ipcMain.on("message", (event: any, args: any) => {
     }
 });
 
-function InitUnpacked(){
+function InitUnpacked() {
     console.log("[main:init:unpacked]");
     // Copy Pack Files
-    FileAPI.mkdirSync(path.join(__dirname, Electron.app.isPackaged ? "../../../../packages" : "../../packages"), {recursive: true});
-    const net_files = FileAPI.readdirSync(path.join(__dirname, "../packages"), {withFileTypes: true});
+    FileAPI.mkdirSync(path.join(__dirname, Electron.app.isPackaged ? "../../../../packages" : "../../packages"), { recursive: true });
+    const net_files = FileAPI.readdirSync(path.join(__dirname, "../packages"), { withFileTypes: true });
     console.log("[main:init:unpacked:files]", net_files.length);
-    if(net_files.length > 0){
+    if (net_files.length > 0) {
         for (let item of net_files) {
             if (item.name !== ".gitkeep") {
                 let srcPath = path.join(path.join(__dirname, "../packages/"), item.name);
@@ -508,29 +532,29 @@ function InitUnpacked(){
         }
     }
     const child_process = require("child_process");
-    if(os.platform() !== "win32"){
+    if (os.platform() !== "win32") {
         child_process.spawn("chmod", ["-R", "777", path.join(__dirname, Electron.app.isPackaged ? "../../../../packages/" : "../../packages/")]);
     }
 }
 
-function StopDocker(){
+function StopEngine() {
     const child_process = require("child_process");
-    if(os.platform() === "win32") {
-        child_process.spawn("TASKKILL", ["/IM", "LLMService.exe", "/F"]);
+    if (os.platform() === "win32") {
+        child_process.spawn("TASKKILL", ["/IM", Package.proxy.file_name + ".exe", "/F"]);
     }
-    if(os.platform() === "darwin") {
-        child_process.spawn("killall", ["LLMService"]);
+    if (os.platform() === "darwin") {
+        child_process.spawn("killall", [Package.proxy.file_name]);
     }
 }
 
-function ReplaceAsar(){
+function ReplaceAsar() {
     console.log("[main:replace:asar]");
-    const {execSync, spawnSync} = require("child_process");
+    const { execSync, spawnSync } = require("child_process");
     const updater_app_path = path.resolve(__dirname, "../../../../");
     const asarPath = path.join(updater_app_path, "/app.asar");
     const updaterAsarPath = path.join(updater_app_path, "/app.temp");
     if (FileAPI.existsSync(updaterAsarPath)) {
-        if(os.platform() === "win32"){
+        if (os.platform() === "win32") {
             function checkWritePermission(folderPath: any) {
                 try {
                     const testFile = path.join(folderPath, ".test");
@@ -553,19 +577,19 @@ function ReplaceAsar(){
                     "RunAs",
                 ];
                 spawnSync("powershell", args, { stdio: "ignore" });
-            }else{
+            } else {
                 const cmd = `xcopy "${updaterAsarPath}" "${asarPath}" /y`;
-                execSync(cmd, {stdio: "ignore"});
+                execSync(cmd, { stdio: "ignore" });
             }
-        }else{
+        } else {
             const cmd = `cp -r -f "${updaterAsarPath}" "${asarPath}"`;
-            execSync(cmd, {stdio: "ignore"});
+            execSync(cmd, { stdio: "ignore" });
         }
         FileAPI.unlinkSync(updater_app_path + "/app.temp");
     }
 }
 
-function DisplayEvent(){
+function DisplayEvent() {
     const bounds: any = Windows.Main.getBounds();
     const display = Electron.screen.getDisplayNearestPoint({
         x: bounds.x + bounds.width / 2,
@@ -575,11 +599,11 @@ function DisplayEvent(){
     store.set(Package.env.LOCAL_STORAGE_PREFIX + ":electron:display", display.id);
 }
 
-function UpdaterEvent(){
-    
+function UpdaterEvent() {
+
     console.log("[main:updater:event]");
 
-    if(Package.build.publish[0].url === ""){
+    if (Package.build.publish[0].url === "") {
         console.log("[main:updater:event]", "off");
         return;
     }

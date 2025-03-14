@@ -107,11 +107,28 @@ function onElectronPreload(server){
     })
 }
 
+function onElectronBrowser(server){
+    return build({
+        configFile: "tools/script/browser/vite.config.ts",
+        mode: "development",
+        plugins: [{
+            name: "electron-preload-watcher",
+            writeBundle() {
+                server.ws.send({type: "full-reload"})
+            }
+        }],
+        build: {
+            watch: {},
+        },
+    })
+}
+
 async function onViteServer(is_desktop){
     server = await createServer({configFile: "renderer/vite.config.ts"});
     server.listen().then(() => {
 
         if(is_desktop){
+            onElectronBrowser(server);
             onElectronPreload(server);
             onElectronMain(server);
         }
@@ -139,6 +156,8 @@ if (argvs.mode === "desktop") {
     await build({configFile: "tools/script/main/vite.config.ts"});
 
     await build({configFile: "tools/script/preload/vite.config.ts"});
+
+    await build({configFile: "tools/script/browser/vite.config.ts"});
 
     await build({configFile: "renderer/vite.config.ts", base: (process.env.SCRIPT_MODE === "dev" ? "/" : "./")});
 
