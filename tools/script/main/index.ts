@@ -85,6 +85,7 @@ Electron.app.commandLine.appendSwitch("ignore-certificate-errors", "true");
 Electron.app.commandLine.appendSwitch("disable-gpu", "false");
 Electron.app.commandLine.appendSwitch("enable-unsafe-swiftshader");
 
+console.log("[main:lang]", Windows.UserData.Lang);
 if(Windows.UserData.Lang !== ""){
     Electron.app.commandLine.appendSwitch("--lang", Windows.UserData.Lang); // zh-CN or en-US
 }else{
@@ -92,10 +93,13 @@ if(Windows.UserData.Lang !== ""){
     Electron.app.commandLine.appendSwitch("--lang", Windows.UserData.Lang);
 }
 
-// 
 if(Package.proxy.pac_url !== ""){
+    console.log("[main:pac_url]", Package.proxy.pac_url);
     Electron.app.commandLine.appendSwitch("--proxy-pac-url", Package.proxy.pac_url + "?time=" + Math.floor(Date.now() / 1000));
 }
+
+const customUserDataPath = path.join(Electron.app.getPath("appData"), Package.build.appId);
+Electron.app.setPath("userData", customUserDataPath);
 
 // Initialize the application's root domain and path
 const base_url: string = Electron.app.isPackaged ? `file://${path.join(__dirname, "../renderer/index.html")}` : `http://${Package.env.VITE_DEV_SERVER_HOST}:${Package.env.VITE_DEV_SERVER_PORT}`;
