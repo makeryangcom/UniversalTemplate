@@ -161,7 +161,6 @@ function onWindowMain(){
             ]);
             tray_icon.setContextMenu(tray_menu);
             tray_icon.setToolTip(Package.title);
-            // tray_icon.setTitle(Package.title);
             tray_icon.on("click",function(_event: any){});
             tray_icon.on("double-click", function () {
                 Windows.Main.show();
